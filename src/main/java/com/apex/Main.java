@@ -1,8 +1,7 @@
 package com.apex;
 
 import com.apex.util.ScannerUtils;
-import com.apex.views.ClientesView;
-import com.apex.views.EmpleadosView;
+import com.apex.views.*;
 
 public class Main {
 
@@ -27,27 +26,15 @@ public class Main {
 
             switch (option) {
 
-                case EMPLEADOS -> {
-                    // Lógica de empleados
+                case EMPLEADOS -> EmpleadosView.menu();
 
-                    EmpleadosView.menu();
-                }
+                case CLIENTES -> ClientesView.menu();
 
-                case CLIENTES -> {
-                    // Lógica de clientes
-                }
+                case PRESTAMOS -> PrestamosView.menu();
 
-                case PRESTAMOS -> {
-                    // Lógica de préstamos
-                }
+                case PAGOS -> PagosView.menu();
 
-                case PAGOS -> {
-                    // Lógica de pagos
-                }
-
-                case REPORTES -> {
-                    // Lógica de reportes
-                }
+                case REPORTES -> ReportesView.menu();
 
                 case SALIR -> System.exit(0);
 
