@@ -1,6 +1,10 @@
 package com.apex.views;
 
+import com.apex.dao.EmpleadoDAO;
+import com.apex.models.Empleado;
 import com.apex.util.ScannerUtils;
+
+import java.sql.SQLException;
 
 public class EmpleadosView {
 
@@ -8,7 +12,11 @@ public class EmpleadosView {
     public static final int CONSULTAR_EMPLEADOS = 2;
     public static final int SALIR = 3;
 
+    public static EmpleadoDAO empleadoDAO = new EmpleadoDAO();
+
     public static void menu() {
+
+
         while (true) {
 
             int option = ScannerUtils.capturarNumero("""
@@ -21,10 +29,33 @@ public class EmpleadosView {
 
                 case REGISTRAR_EMPLEADOS -> {
                     // Lógica para registrar empleados
+
+                    try {
+                        System.out.println("\n");
+                        String nombre = ScannerUtils.capturarTexto("Nombre");
+                        String documento = ScannerUtils.capturarTexto("Documento");
+                        String rol = ScannerUtils.capturarTexto("Rol");
+                        String correo = ScannerUtils.capturarTexto("Correo");
+                        Double salario = ScannerUtils.capturarDecimal("Salario");
+                        Empleado empleado = new Empleado(nombre, documento, rol, correo, salario);
+
+                        empleadoDAO.crear(empleado);
+                    } catch (SQLException e) {
+                        System.err.println("No se ha podido registrar el empleado");
+                    }
                 }
 
                 case CONSULTAR_EMPLEADOS -> {
                     // Lógica para consultar empleados
+
+                    try {
+                        int id = ScannerUtils.capturarNumero("id");
+
+                        empleadoDAO.buscarPorId(id);
+
+                    } catch (SQLException e) {
+                        System.err.println("No se ha encontrado el empleado");
+                    }
                 }
 
                 case SALIR -> {
