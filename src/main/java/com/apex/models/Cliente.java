@@ -1,0 +1,85 @@
+package com.apex.models;
+
+import com.apex.dao.ClienteDAO;
+
+import java.sql.SQLException;
+import java.util.List;
+
+public class Cliente {
+    private int id;
+    private String nombre;
+    private String documento;
+    private String correo;
+    private String telefono;
+
+    static ClienteDAO clienteDAO = new ClienteDAO();
+
+    public Cliente() {
+    }
+
+    public Cliente(int id, String nombre, String documento, String correo, String telefono) {
+        this.id = id;
+        this.nombre = nombre;
+        this.documento = documento;
+        this.correo = correo;
+        this.telefono = telefono;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(String documento) {
+        this.documento = documento;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public static Cliente consultar (int id) throws SQLException {
+        List<Cliente> clientes = clienteDAO.listar();
+
+        return clientes.stream()
+                .filter(cliente -> cliente.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public void mostrarCliente() {
+        System.out.println("\n---------------------------");
+        System.out.println("Nombre: " + this.nombre);
+        System.out.println("Documento: " + this.documento);
+        System.out.println("Correo: " + this.correo);
+        System.out.println("Telefono: " + this.telefono);
+    }
+
+}
