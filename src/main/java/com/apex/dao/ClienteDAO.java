@@ -72,7 +72,7 @@ public class ClienteDAO {
                 .orElse(null);
     }
 
-    private int consultarIdCliente (String nombre) throws SQLException {
+    public int consultarIdCliente (String nombre) throws SQLException {
         Cliente clienteEncontrado = this.consultarClientePorNombre(nombre);
 
         if (clienteEncontrado != null) {

@@ -1,5 +1,7 @@
 package com.apex.models;
 
+import com.apex.util.ScannerUtils;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
 
@@ -16,8 +18,8 @@ public class Prestamo {
     public Prestamo() {
     }
 
-    public Prestamo(int id, int empleado_id, String estado, int cliente_id, double interes, double monto, int cuotas, LocalDate fecha_inicio) {
-        this.id = id;
+    public Prestamo(int cliente_id, int empleado_id, double monto, double interes, int cuotas, LocalDate fecha_inicio) {
+        this.cliente_id = cliente_id;
         this.empleado_id = empleado_id;
         this.estado = estado;
         this.cliente_id = cliente_id;
@@ -25,6 +27,7 @@ public class Prestamo {
         this.monto = monto;
         this.cuotas = cuotas;
         this.fecha_inicio = fecha_inicio;
+        this.estado = "Pendiente";
     }
 
     public int getId() {
@@ -95,6 +98,8 @@ public class Prestamo {
         Cliente clienteDelPrestamo = Cliente.consultar(this.cliente_id);
 
         if (clienteDelPrestamo != null) {
+            System.out.println("\n Prestamo id " + this.id);
+            System.out.println("-----------------------------------------------");
             System.out.println("\nPrestamo fecha " + fecha_inicio.getDayOfMonth() +
                     "/" + fecha_inicio.getMonth() +
                     "/" + fecha_inicio.getYear());
@@ -103,4 +108,18 @@ public class Prestamo {
             System.out.println("El restoooo");
         }
     }
+
+    public void calucularSimulacion() {
+        double monto = ScannerUtils.capturarDecimal("Monto");
+        int periodoTiempo = ScannerUtils.capturarNumero("Periodo de tiempo (meses)");
+
+        Simulacion simulacion = new Simulacion(monto, periodoTiempo);
+        simulacion.mostrarSimulacion();
+    }
+
+    public void cambiarEstado() {
+        this.estado = "Pagado";
+    }
+
+
 }

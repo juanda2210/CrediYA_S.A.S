@@ -68,10 +68,16 @@ public class Cliente {
     public static Cliente consultar (int id) throws SQLException {
         List<Cliente> clientes = clienteDAO.listar();
 
-        return clientes.stream()
+        Cliente clientePorBuscar = clientes.stream()
                 .filter(cliente -> cliente.getId() == id)
                 .findFirst()
                 .orElse(null);
+
+        if (clientePorBuscar != null) {
+            return clientePorBuscar;
+        }
+
+        throw new SQLException("Cliente no encontrado por el id " + id);
     }
 
     public void mostrarCliente() {

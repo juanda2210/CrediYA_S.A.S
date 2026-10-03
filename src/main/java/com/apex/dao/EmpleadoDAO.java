@@ -1,12 +1,15 @@
 package com.apex.dao;
 
 import com.apex.database.ConexionDB;
+import com.apex.models.Cliente;
 import com.apex.models.Empleado;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmpleadoDAO {
 
@@ -60,5 +63,55 @@ public class EmpleadoDAO {
         }
 
         return null;
+    }
+
+    public List<Empleado> listar() throws SQLException {
+
+        String sql = """
+                SELECT id, nombre, documento, rol, correo, salario
+                FROM empleados
+                """;
+
+        List<Empleado> empleados = new ArrayList<>();
+
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+
+                Empleado empleado = new Empleado();
+
+                empleado.setId(rs.getInt("id"));
+                empleado.setNombre(rs.getString("nombre"));
+                empleado.setDocumento(rs.getString("documento"));
+                empleado.setRol(rs.getString("rol"));
+                empleado.setCorreo(rs.getString("correo"));
+                empleado.setSalario(rs.getDouble("salario"));
+
+                empleados.add(empleado);
+            }
+        }
+        return empleados;
+    }
+
+    private Empleado consultarPorNombre(String nombre) throws SQLException {
+        List<Empleado> empleados = this.listar();
+
+        Empleado empleadoEncontrado = empleados.stream()
+                .filter(empleado -> empleado.getNombre().equalsIgnoreCase(nombre))
+                .findFirst()
+                .orElse(null);
+
+        if (empleadoEncontrado != null) {
+            return empleadoEncontrado;
+        } else {
+            throw new SQLException("Nombre del empleado no encontrado");
+        }
+    }
+
+    public int consultarIdEmpleado(String nombre) throws SQLException {
+        Empleado empleado = this.consultarPorNombre(nombre);
+        return empleado.getId();
     }
 }
