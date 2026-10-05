@@ -37,9 +37,10 @@ public class ClientesView {
                         String documento = ScannerUtils.capturarTexto("Documento");
                         String correo = ScannerUtils.capturarTexto("Correo");
                         String telefono = ScannerUtils.capturarTexto("Telefono");
-                        Cliente cliente = new Cliente();
+                        Cliente cliente = new Cliente(nombre, documento, correo, telefono);
 
                         clienteDAO.crear(cliente);
+                        System.out.println("\nCliente creado satisfactoriamente");
                     } catch (SQLException e) {
                         System.err.println("Fue imposible crear el cliente");
                     }
@@ -59,13 +60,17 @@ public class ClientesView {
                 case CONSULTAR_PRESTAMOS -> {
                     // Lógica para consultar préstamos
 
-                    String nombre = ScannerUtils.capturarTexto("Nombre");
                     try {
-                        Prestamo prestamo = clienteDAO.buscarPorCliente(nombre);
+                        String nombre = ScannerUtils.capturarTexto("Nombre");
+                        int clienteId = clienteDAO.consultarIdCliente(nombre);
+                        Prestamo prestamo = clienteDAO.buscarPorCliente(clienteId);
                         prestamo.mostrarPrestamo();
-                    } catch (SQLException e) {
-                        e.getMessage();
+                    } catch (SQLException | IllegalArgumentException e) {
+                        System.err.println(e.getMessage());
+                    }catch (NullPointerException e) {
+                        System.err.println("No hay ningun prestamo a nombre del cliente consultado");
                     }
+
                 }
 
                 case SALIR -> {

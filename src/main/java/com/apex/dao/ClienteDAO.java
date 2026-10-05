@@ -17,7 +17,7 @@ public class ClienteDAO {
 
         String sql = """
                 INSERT INTO clientes (nombre, documento, correo, telefono)
-                VALUES (?, ?. ?, ?)
+                VALUES (?, ?, ?, ?)
                 """;
 
         try (Connection conn = ConexionDB.getConnection();
@@ -74,12 +74,11 @@ public class ClienteDAO {
 
     public int consultarIdCliente (String nombre) throws SQLException {
         Cliente clienteEncontrado = this.consultarClientePorNombre(nombre);
-
         if (clienteEncontrado != null) {
             return clienteEncontrado.getId();
+        } else {
+            throw new IllegalArgumentException("Cliente no encontrado en la base de datos");
         }
-
-        throw new SQLException("El cliente que está tratando de buscar no se encuentra en la base de datos");
     }
 
 
@@ -104,9 +103,7 @@ public class ClienteDAO {
         }
     }*/
 
-    public Prestamo buscarPorCliente(String nombre) throws SQLException {
-
-        int clienteId = this.consultarIdCliente(nombre);
+    public Prestamo buscarPorCliente(int clienteId) throws SQLException {
 
         String sql = """
             SELECT id, cliente_id, empleado_id, monto, interes,

@@ -22,7 +22,7 @@ public class Main {
                     3. Préstamos
                     4. Pagos
                     5. Reportes
-                    6. Salir del programaß""");
+                    6. Salir del programa""");
 
             switch (option) {
 

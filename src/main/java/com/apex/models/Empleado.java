@@ -66,4 +66,13 @@ public class Empleado {
     public void setSalario(double salario) {
         this.salario = salario;
     }
+
+    public void mostrarEmpleado() {
+        System.out.println("-----------------");
+        System.out.println("Nombre: " + this.nombre);
+        System.out.println("id: " + this.id);
+        System.out.println("Rol: " + this.rol);
+        System.out.println("-----------------");
+        System.out.println("SALARIO: " + this.salario);
+    }
 }

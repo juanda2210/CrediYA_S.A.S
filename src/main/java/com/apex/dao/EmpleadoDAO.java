@@ -1,7 +1,6 @@
 package com.apex.dao;
 
 import com.apex.database.ConexionDB;
-import com.apex.models.Cliente;
 import com.apex.models.Empleado;
 
 import java.sql.Connection;

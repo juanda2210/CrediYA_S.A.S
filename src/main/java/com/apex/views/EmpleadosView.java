@@ -40,6 +40,7 @@ public class EmpleadosView {
                         Empleado empleado = new Empleado(nombre, documento, rol, correo, salario);
 
                         empleadoDAO.crear(empleado);
+                        System.out.println("\nEmpleado creado satisfactoriamente");
                     } catch (SQLException e) {
                         System.err.println("No se ha podido registrar el empleado");
                     }
@@ -51,7 +52,14 @@ public class EmpleadosView {
                     try {
                         int id = ScannerUtils.capturarNumero("id");
 
-                        empleadoDAO.buscarPorId(id);
+                        Empleado empleado = empleadoDAO.buscarPorId(id);
+
+                        try {
+                            empleado.mostrarEmpleado();
+                        } catch (NullPointerException e) {
+                            System.err.println("Empleado no encontrado por id #" + id);
+                        }
+
 
                     } catch (SQLException e) {
                         System.err.println("No se ha encontrado el empleado");
