@@ -13,7 +13,7 @@ import java.util.List;
 
 public class PagosDAO {
 
-    private static final PagosDAO pagosDAO = PagosDAO.instanciaUnica();
+    private static final PagosDAO pagosDAO = new PagosDAO();
     private static final ClienteDAO clienteDAO = ClienteDAO.instanciaUnica();
 
 
