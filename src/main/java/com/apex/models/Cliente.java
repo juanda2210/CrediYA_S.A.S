@@ -81,6 +81,7 @@ public class Cliente {
 
     public void mostrarCliente() {
         System.out.println("\n---------------------------");
+        System.out.println("id: " + this.id);
         System.out.println("Nombre: " + this.nombre);
         System.out.println("Documento: " + this.documento);
         System.out.println("Correo: " + this.correo);

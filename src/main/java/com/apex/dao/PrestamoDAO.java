@@ -13,7 +13,7 @@ public class PrestamoDAO {
 
         String sql = """
                 SELECT id, cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio, estado
-                FROM clientes
+                FROM prestamos
                 """;
 
         List<Prestamo> prestamos = new ArrayList<>();
@@ -30,7 +30,7 @@ public class PrestamoDAO {
                 prestamo.setCliente_id(rs.getInt("cliente_id"));
                 prestamo.setEmpleado_id(rs.getInt("empleado_id"));
                 prestamo.setMonto(rs.getDouble("monto"));
-                prestamo.setInteres(rs.getDouble("intereses"));
+                prestamo.setInteres(rs.getDouble("interes"));
                 prestamo.setCuotas(rs.getInt("cuotas"));
                 prestamo.setFecha_inicio(rs.getDate("fecha_inicio").toLocalDate());
                 prestamo.setEstado(rs.getString("estado"));
@@ -43,7 +43,7 @@ public class PrestamoDAO {
 
     public void crear(Prestamo prestamo) throws SQLException {
         String sql = """
-                INSERT INTO prestamos (cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio, estado
+                INSERT INTO prestamos (cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio, estado)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
                 """;
 
@@ -54,7 +54,7 @@ public class PrestamoDAO {
             ps.setInt(2, prestamo.getEmpleado_id());
             ps.setDouble(3, prestamo.getMonto());
             ps.setDouble(4, prestamo.getInteres());
-            ps.setInt(5, prestamo.getCliente_id());
+            ps.setInt(5, prestamo.getCuotas());
             ps.setDate(6, Date.valueOf(prestamo.getFecha_inicio()));
             ps.setString(7, prestamo.getEstado());
 
@@ -69,7 +69,7 @@ public class PrestamoDAO {
                 .filter(prestamo -> prestamo.getCliente_id() == clienteId)
                 .toList();
 
-        if (prestamosdelCliente.size() == 0) {
+        if (prestamosdelCliente.isEmpty()) {
             throw new SQLException("No se encontraron prestamos para el cliente con clienteId " + clienteId);
         } else {
             return prestamosdelCliente;
@@ -89,5 +89,23 @@ public class PrestamoDAO {
         }
 
         throw new SQLException("El prestamo del id " + id + " no fue encontrado en base de datos");
+    }
+
+    public void actualizarEstado(int prestamoId, String estado) throws SQLException {
+
+        String sql = """
+            UPDATE prestamos
+            SET estado = ?
+            WHERE id = ?
+            """;
+
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, estado);
+            ps.setInt(2, prestamoId);
+
+            ps.executeUpdate();
+        }
     }
 }

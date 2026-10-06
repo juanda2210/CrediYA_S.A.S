@@ -1,7 +1,6 @@
 package com.apex.dao;
 
 import com.apex.database.ConexionDB;
-import com.apex.models.Cliente;
 import com.apex.models.Pago;
 import com.apex.models.Prestamo;
 import com.apex.util.ScannerUtils;
@@ -17,7 +16,7 @@ public class PagosDAO {
 
     public void registrarAbono(Pago pago) throws SQLException {
         String sql = """
-                INSERT INTO pagos (prestamo_id, fecha_pago, monto
+                INSERT INTO pagos (prestamo_id, fecha_pago, monto)
                 VALUES(?, ?, ?)
                 """;
 

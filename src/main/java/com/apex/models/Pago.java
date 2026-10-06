@@ -1,12 +1,7 @@
 package com.apex.models;
 
-import com.apex.dao.PagosDAO;
-import com.apex.dao.PrestamoDAO;
-import com.apex.util.ScannerUtils;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.List;
 
 public class Pago {
 
@@ -15,8 +10,6 @@ public class Pago {
     LocalDate fecha_pago;
     double monto;
 
-    public static PagosDAO pagosDAO = new PagosDAO();
-    public static PrestamoDAO prestamoDAO = new PrestamoDAO();
 
 
     public Pago() {

@@ -20,7 +20,7 @@ public class Simulacion {
         this.tasaInteresAnual = TASAFIJAANUAL;
         this.tasaInteresMensual = this.tasaInteresAnual / 12;
         this.interesAnual = this.monto * tasaInteresAnual;
-        this.interesMensual = this.montoMensual * tasaInteresMensual;
+        this.interesMensual = this.monto * tasaInteresMensual;
     }
 
     public double getMonto() {
@@ -71,7 +71,7 @@ public class Simulacion {
         this.calcularCuotaMensual();
         this.calcularTotalAPagar();
 
-        System.out.println("Simulacion de credito");
+        System.out.println("\nSimulacion de credito");
         System.out.println("---------------------");
         System.out.println("\nMonto a prestar: " + this.monto);
         System.out.println("Cuota mensual: " + this.cuotaMensual);
@@ -79,8 +79,10 @@ public class Simulacion {
         System.out.println("-----------------------------------------------");
         System.out.println("\nINTERESES");
         System.out.println("-----------");
-        System.out.println("Tasa de interés mensual: " + this.tasaInteresMensual);
+        System.out.println("Tasa de interés mensual: " + this.tasaInteresMensual * 100 + "%");
         System.out.println("Interes mensual: " + this.interesMensual);
+        System.out.println("Tasa de interés anual: " + this.tasaInteresAnual * 100 + "%");
+        System.out.println("Interes anual: " + this.interesAnual);
     }
 
 }

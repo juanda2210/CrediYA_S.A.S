@@ -19,6 +19,8 @@ public class PrestamosView {
     public static final int SALIR = 4;
 
     public static PrestamoDAO prestamoDAO = new PrestamoDAO();
+    public static ClienteDAO clienteDAO = new ClienteDAO();
+    public static EmpleadoDAO empleadoDAO = new EmpleadoDAO();
 
     public static void menu() {
         while (true) {
@@ -37,24 +39,26 @@ public class PrestamosView {
 
                     try {
                         String nombreCliente = ScannerUtils.capturarTexto("Nombre del cliente");
-                        ClienteDAO clienteDAO = new ClienteDAO();
                         int idCliente = clienteDAO.consultarIdCliente(nombreCliente);
 
                         String nombreEmpleado = ScannerUtils.capturarTexto("Nombre del empleado");
-                        EmpleadoDAO empleadoDAO = new EmpleadoDAO();
                         int idEmpleado = empleadoDAO.consultarIdEmpleado(nombreEmpleado);
 
                         double monto = ScannerUtils.capturarDecimal("Monto total");
                         int periodoDeTiempo = ScannerUtils.capturarNumero("Periodo (meses)");
                         Simulacion simulacion = new Simulacion(monto, periodoDeTiempo);
+                        double interes = simulacion.getInteresAnual();
 
-                        Prestamo prestamo = new Prestamo(idCliente, idEmpleado, simulacion.getMonto(), simulacion.getTasaInteresAnual(), simulacion.getPeriodoDeMeses(), LocalDate.now());
+
+                        Prestamo prestamo = new Prestamo(idCliente, idEmpleado, monto, interes, periodoDeTiempo, LocalDate.now());
                         prestamoDAO.crear(prestamo);
 
                         System.out.println("Su credito ha sido generado de la siguiente manera: ");
                         simulacion.mostrarSimulacion();
                     } catch (SQLException e) {
                         System.err.println("Su prestamo no se ha podido generar");
+                    } catch (IllegalArgumentException e) {
+                        System.err.println(e.getMessage());
                     }
                 }
 
@@ -79,13 +83,14 @@ public class PrestamosView {
                             }
                         });
 
-                        int prestamoId = ScannerUtils.capturarNumero("Id del prestamo");
+                        int prestamoId = ScannerUtils.capturarNumero("\nId del prestamo");
                         Prestamo prestamo = prestamoDAO.seleccionarPorId(prestamoId);
                         prestamo.cambiarEstado();
+                        prestamoDAO.actualizarEstado(prestamoId, "Pagado");
 
                         System.out.println("Estado del prestamo actualizado satisfactoriamente");
                     } catch (SQLException e) {
-                        e.getMessage();
+                        System.err.println(e.getMessage());
                     }
 
 

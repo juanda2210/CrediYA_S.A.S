@@ -97,20 +97,21 @@ public class EmpleadoDAO {
     private Empleado consultarPorNombre(String nombre) throws SQLException {
         List<Empleado> empleados = this.listar();
 
-        Empleado empleadoEncontrado = empleados.stream()
+        return empleados.stream()
                 .filter(empleado -> empleado.getNombre().equalsIgnoreCase(nombre))
                 .findFirst()
                 .orElse(null);
 
-        if (empleadoEncontrado != null) {
-            return empleadoEncontrado;
-        } else {
-            throw new SQLException("Nombre del empleado no encontrado");
-        }
     }
 
     public int consultarIdEmpleado(String nombre) throws SQLException {
-        Empleado empleado = this.consultarPorNombre(nombre);
-        return empleado.getId();
+        Empleado empleadoEncontrado = this.consultarPorNombre(nombre);
+
+        if (empleadoEncontrado != null) {
+            return empleadoEncontrado.getId();
+        } else {
+            throw new IllegalArgumentException("Empleado no encontrado en la base de datos");
+        }
+
     }
 }

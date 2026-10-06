@@ -21,10 +21,8 @@ public class Prestamo {
     public Prestamo(int cliente_id, int empleado_id, double monto, double interes, int cuotas, LocalDate fecha_inicio) {
         this.cliente_id = cliente_id;
         this.empleado_id = empleado_id;
-        this.estado = estado;
-        this.cliente_id = cliente_id;
-        this.interes = interes;
         this.monto = monto;
+        this.interes = interes;
         this.cuotas = cuotas;
         this.fecha_inicio = fecha_inicio;
         this.estado = "Pendiente";
@@ -100,7 +98,7 @@ public class Prestamo {
         if (clienteDelPrestamo != null) {
             System.out.println("\n Prestamo id " + this.id);
             System.out.println("-----------------------------------------------");
-            System.out.println("\nPrestamo fecha " + fecha_inicio.getDayOfMonth() +
+            System.out.println("Prestamo fecha " + fecha_inicio.getDayOfMonth() +
                     "/" + fecha_inicio.getMonth() +
                     "/" + fecha_inicio.getYear());
             System.out.println("----------------------------------------------");
