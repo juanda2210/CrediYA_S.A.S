@@ -4,6 +4,7 @@ import com.apex.dao.PagosDAO;
 import com.apex.dao.PrestamoDAO;
 import com.apex.models.Pago;
 import com.apex.models.Prestamo;
+import com.apex.util.FileUtils;
 import com.apex.util.ScannerUtils;
 
 import java.sql.SQLException;
@@ -15,7 +16,8 @@ public class PagosView {
     public static final int REGISTRAR_ABONOS = 1;
     public static final int MOSTRAR_SALDO_PENDIENTE = 2;
     public static final int MOSTRAR_HISTORICO_PAGOS = 3;
-    public static final int SALIR = 4;
+    public static final int EXPORTAR = 4;
+    public static final int SALIR = 5;
 
     public static PagosDAO pagosDAO = new PagosDAO();
     public static PrestamoDAO prestamoDAO = new PrestamoDAO();
@@ -28,7 +30,8 @@ public class PagosView {
             1. Registrar abonos
             2. Mostrar saldo pendiente
             3. Mostrar histórico de pagos
-            4. Volver al menu principal""");
+            4. Exportar pago a archivo
+            5. Volver al menu principal""");
 
             switch (option) {
 
@@ -70,9 +73,24 @@ public class PagosView {
                         int idPrestamo = ScannerUtils.capturarNumero("Id del prestamo");
                         List<Pago> pagosPorIdPrestamo = pagosDAO.pagosPorIdPrestamo(idPrestamo);
 
-                        pagosPorIdPrestamo.forEach(pago -> pago.mostrarPago());
+                        pagosPorIdPrestamo.forEach(Pago::mostrarPago);
                     } catch (RuntimeException e) {
                         throw new RuntimeException(e);
+                    }
+                }
+
+                case EXPORTAR -> {
+                    try {
+                        int id = ScannerUtils.capturarNumero("Id del pago");
+                        Pago pago = pagosDAO.buscarPagoPorId(id);
+
+                        if (pago != null) {
+                            FileUtils.escribirPago(pago);
+                        } else {
+                            System.err.println("Pago no encontrado en base de datos");
+                        }
+                    } catch (SQLException e) {
+                        System.err.println("Falla en la base de datos al exportar pago");
                     }
                 }
 

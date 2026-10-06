@@ -5,8 +5,10 @@ import com.apex.dao.EmpleadoDAO;
 import com.apex.dao.PrestamoDAO;
 import com.apex.models.Prestamo;
 import com.apex.models.Simulacion;
+import com.apex.util.FileUtils;
 import com.apex.util.ScannerUtils;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
@@ -16,7 +18,8 @@ public class PrestamosView {
     public static final int CREAR_PRESTAMOS = 1;
     public static final int SIMULACION_PRESTAMO = 2;
     public static final int CAMBIAR_ESTADO = 3;
-    public static final int SALIR = 4;
+    public static final int EXPORTAR = 4;
+    public static final int SALIR = 5;
 
     public static PrestamoDAO prestamoDAO = new PrestamoDAO();
     public static ClienteDAO clienteDAO = new ClienteDAO();
@@ -30,7 +33,8 @@ public class PrestamosView {
             1. Crear préstamo
             2. Simulación de préstamo
             3. Cambiar estado
-            4. Volver al menu principal""");
+            4. Exportar prestamo a archivo
+            5. Volver al menu principal""");
 
             switch (option) {
 
@@ -77,7 +81,7 @@ public class PrestamosView {
                         List<Prestamo> prestamosDelCliente = prestamoDAO.prestamosPorCliente(clienteId);
                         prestamosDelCliente.forEach(prestamo -> {
                             try {
-                                prestamo.mostrarPrestamo();
+                                prestamo.mostrarPrestamoConIdCliente();
                             } catch (SQLException e) {
                                 throw new RuntimeException(e);
                             }
@@ -94,6 +98,21 @@ public class PrestamosView {
                     }
 
 
+                }
+
+                case EXPORTAR -> {
+                    try {
+                        int id = ScannerUtils.capturarNumero("Id del prestamo");
+                        Prestamo prestamo = prestamoDAO.seleccionarPorId(id);
+
+                        if (prestamo != null) {
+                            FileUtils.escribirPrestamo(prestamo);
+                        } else {
+                            System.err.println("Prestamo no encontrado por id " + id);
+                        }
+                    } catch (SQLException e) {
+                        System.err.println("Falla en la base de datos al exportar prestamo");
+                    }
                 }
 
                 case SALIR -> {

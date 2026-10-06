@@ -16,7 +16,7 @@ public class ClienteDAO {
     public void crear(Cliente cliente) throws SQLException {
 
         String sql = """
-                INSERT INTO clientes (nombre, documento, correo, telefono)
+                INSERT INTO clientes (nombre, documento, correo, telefono,situacion_crediticia)
                 VALUES (?, ?, ?, ?)
                 """;
 
@@ -27,9 +27,45 @@ public class ClienteDAO {
             ps.setString(2, cliente.getDocumento());
             ps.setString(3, cliente.getCorreo());
             ps.setString(4, cliente.getTelefono());
+            ps.setString(5, cliente.getSituacionCrediticia());
 
             ps.executeUpdate();
         }
+    }
+
+
+    public Cliente consultarClientePorId(int idCliente) throws SQLException {
+
+        String sql = """
+                SELECT id, nombre, documento, correo, telefono, situacion_crediticia
+                FROM clientes
+                WHERE id = ?
+                """;
+
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)){
+
+            ps.setInt(1, idCliente);
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                if (rs.next()) {
+
+                    Cliente cliente = new Cliente();
+
+                    cliente.setId(rs.getInt("id"));
+                    cliente.setNombre(rs.getString("nombre"));
+                    cliente.setDocumento(rs.getString("documento"));
+                    cliente.setCorreo(rs.getString("correo"));
+                    cliente.setTelefono(rs.getString("telefono"));
+                    cliente.setSituacionCrediticia(rs.getString("situacion_crediticia"));
+
+                    return cliente;
+                }
+            }
+        }
+
+        return null;
     }
 
 
@@ -138,5 +174,58 @@ public class ClienteDAO {
         }
 
         return null;
+    }
+
+    public void actualizarSituacionFinanciera(int idCliente, String situacionCrediticia) throws SQLException {
+        String sql = """
+            UPDATE clientes
+            SET situacion_crediticia = ?
+            WHERE id = ?
+            """;
+
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, situacionCrediticia);
+            ps.setInt(2, idCliente);
+
+            ps.executeUpdate();
+        }
+    }
+
+    public List<Cliente> clientesMorosos() throws SQLException {
+
+        String sql = """
+            SELECT id, nombre, documento, correo, telefono, situacion_crediticia
+            FROM clientes
+            WHERE situacion_crediticia = ?
+            """;
+
+        List<Cliente> clientes = new ArrayList<>();
+
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, "Moroso");
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+
+                    Cliente cliente = new Cliente();
+
+                    cliente.setId(rs.getInt("id"));
+                    cliente.setNombre(rs.getString("nombre"));
+                    cliente.setDocumento(rs.getString("documento"));
+                    cliente.setCorreo(rs.getString("correo"));
+                    cliente.setTelefono(rs.getString("telefono"));
+                    cliente.setSituacionCrediticia(rs.getString("situacion_crediticia"));
+
+                    clientes.add(cliente);
+                }
+            }
+        }
+
+        return clientes;
     }
 }

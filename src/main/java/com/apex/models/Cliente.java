@@ -11,6 +11,7 @@ public class Cliente {
     private String documento;
     private String correo;
     private String telefono;
+    private String situacionCrediticia;
 
     static ClienteDAO clienteDAO = new ClienteDAO();
 
@@ -22,6 +23,7 @@ public class Cliente {
         this.documento = documento;
         this.correo = correo;
         this.telefono = telefono;
+        this.situacionCrediticia = "Puntual";
     }
 
     public int getId() {
@@ -62,6 +64,14 @@ public class Cliente {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getSituacionCrediticia() {
+        return situacionCrediticia;
+    }
+
+    public void setSituacionCrediticia(String situacionCrediticia) {
+        this.situacionCrediticia = situacionCrediticia;
     }
 
     public static Cliente consultar (int id) throws SQLException {

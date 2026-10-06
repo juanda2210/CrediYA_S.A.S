@@ -108,4 +108,82 @@ public class PrestamoDAO {
             ps.executeUpdate();
         }
     }
+
+    public List<Prestamo> prestamosPendientes() throws SQLException {
+
+        String sql = """
+            SELECT id, cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio, estado
+            FROM prestamos
+            WHERE estado = ?
+            """;
+
+        List<Prestamo> prestamos = new ArrayList<>();
+
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, "Pendiente");
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+
+                    Prestamo prestamo = new Prestamo();
+
+                    prestamo.setId(rs.getInt("id"));
+                    prestamo.setCliente_id(rs.getInt("cliente_id"));
+                    prestamo.setEmpleado_id(rs.getInt("empleado_id"));
+                    prestamo.setMonto(rs.getDouble("monto"));
+                    prestamo.setInteres(rs.getDouble("interes"));
+                    prestamo.setCuotas(rs.getInt("cuotas"));
+                    prestamo.setFecha_inicio(rs.getDate("fecha_inicio").toLocalDate());
+                    prestamo.setEstado(rs.getString("estado"));
+
+                    prestamos.add(prestamo);
+                }
+            }
+        }
+
+        return prestamos;
+    }
+
+    public List<Prestamo> prestamosVencidos() throws SQLException {
+
+        String sql = """
+            SELECT id, cliente_id, empleado_id, monto, interes, cuotas, fecha_inicio, estado
+            FROM prestamos
+            WHERE estado = ?
+            """;
+
+        List<Prestamo> prestamos = new ArrayList<>();
+
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, "Pagado");
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+
+                    Prestamo prestamo = new Prestamo();
+
+                    prestamo.setId(rs.getInt("id"));
+                    prestamo.setCliente_id(rs.getInt("cliente_id"));
+                    prestamo.setEmpleado_id(rs.getInt("empleado_id"));
+                    prestamo.setMonto(rs.getDouble("monto"));
+                    prestamo.setInteres(rs.getDouble("interes"));
+                    prestamo.setCuotas(rs.getInt("cuotas"));
+                    prestamo.setFecha_inicio(rs.getDate("fecha_inicio").toLocalDate());
+                    prestamo.setEstado(rs.getString("estado"));
+
+                    prestamos.add(prestamo);
+                }
+            }
+        }
+
+        return prestamos;
+    }
+
+
 }

@@ -2,6 +2,7 @@ package com.apex.views;
 
 import com.apex.dao.EmpleadoDAO;
 import com.apex.models.Empleado;
+import com.apex.util.FileUtils;
 import com.apex.util.ScannerUtils;
 
 import java.sql.SQLException;
@@ -10,7 +11,8 @@ public class EmpleadosView {
 
     public static final int REGISTRAR_EMPLEADOS = 1;
     public static final int CONSULTAR_EMPLEADOS = 2;
-    public static final int SALIR = 3;
+    public static final int EXPORTAR = 3;
+    public static final int SALIR = 4;
 
     public static EmpleadoDAO empleadoDAO = new EmpleadoDAO();
 
@@ -23,7 +25,8 @@ public class EmpleadosView {
             \n===== MENÚ DE EMPLEADOS =====
             1. Registrar empleados
             2. Consultar empleados
-            3. Volver al menu principal""");
+            3. Exportar empleado a archivo
+            4. Volver al menu principal""");
 
             switch (option) {
 
@@ -63,6 +66,21 @@ public class EmpleadosView {
 
                     } catch (SQLException e) {
                         System.err.println("No se ha encontrado el empleado");
+                    }
+                }
+
+                case EXPORTAR -> {
+                    try {
+                        int id = ScannerUtils.capturarNumero("Id empleado");
+                        Empleado empleado = empleadoDAO.buscarPorId(id);
+
+                        if (empleado != null) {
+                            FileUtils.escribirEmpleado(empleado);
+                        } else {
+                            System.err.println("Empleado no encontrado");
+                        }
+                    } catch (SQLException e) {
+                        System.err.println("Falla en la base de datos al exportar empleado");
                     }
                 }
 

@@ -122,4 +122,13 @@ public class PagosDAO {
         return pagos;
     }
 
+    public Pago buscarPagoPorId(int id) throws SQLException {
+        List<Pago> todosLosPagos = this.todosLosPagos();
+
+        return todosLosPagos.stream()
+                .filter(pago -> pago.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
 }

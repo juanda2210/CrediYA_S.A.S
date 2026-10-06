@@ -92,7 +92,7 @@ public class Prestamo {
         this.fecha_inicio = fecha_inicio;
     }
 
-    public void mostrarPrestamo() throws SQLException {
+    public void mostrarPrestamoConIdCliente() throws SQLException {
         Cliente clienteDelPrestamo = Cliente.consultar(this.cliente_id);
 
         if (clienteDelPrestamo != null) {
@@ -117,6 +117,17 @@ public class Prestamo {
 
     public void cambiarEstado() {
         this.estado = "Pagado";
+    }
+
+    public void mostrarPrestamo() {
+        System.out.println("\n--------Prestamo id " + this.id + "-----------");
+        System.out.println("Id cliente " + this.cliente_id);
+        System.out.println("--------------------------------");
+        System.out.println("Monto: " + this.monto);
+        System.out.println("Cuotas: " + this.cuotas);
+        System.out.println("Interes generado: " + this.interes);
+        System.out.println("-----------------------------------");
+        System.out.println("Estado del prestamo: " + this.estado);
     }
 
 
