@@ -39,7 +39,7 @@ public class ClientesView {
                     try {
                         System.out.println("\n");
                         String nombre = ScannerUtils.capturarTexto("Nombre");
-                        String documento = ScannerUtils.capturarTexto("Documento");
+                        String documento = ScannerUtils.capturarRegistroDocumentoCliente("Documento");
                         String correo = ScannerUtils.capturarTexto("Correo");
                         String telefono = ScannerUtils.capturarTexto("Telefono");
                         Cliente cliente = new Cliente(nombre, documento, correo, telefono);
@@ -71,8 +71,8 @@ public class ClientesView {
                     // Lógica para consultar préstamos
 
                     try {
-                        String nombre = ScannerUtils.capturarTexto("Nombre");
-                        int clienteId = clienteDAO.consultarIdCliente(nombre);
+                        String documento = ScannerUtils.capturarTexto("Documento");
+                        int clienteId = clienteDAO.consultarIdCliente(documento);
                         Prestamo prestamo = clienteDAO.buscarPorCliente(clienteId);
                         prestamo.mostrarPrestamoConIdCliente();
                     } catch (SQLException | IllegalArgumentException e) {
@@ -85,30 +85,24 @@ public class ClientesView {
 
                 case CLIENTE_MOROSO -> {
                     try {
-                        int id = ScannerUtils.capturarNumero("Id cliente");
-                        List<Cliente> clientes = clienteDAO.listar();
+                        String documento = ScannerUtils.capturarTexto("Documento");
+                        int clienteId = clienteDAO.consultarIdCliente(documento);
 
-                        Cliente clienteEncontrado = clientes.stream()
-                                .filter(cliente -> cliente.getId() == id)
-                                .findFirst()
-                                .orElse(null);
-
-                        if (clienteEncontrado != null) {
-                            clienteDAO.actualizarSituacionFinanciera(id, "Moroso");
-                            System.out.println("Estado actualizado correctamente");
-                        } else {
-                            System.err.println("Cliente no encontrado en base de datos");
-                        }
-
+                        clienteDAO.actualizarSituacionFinanciera(clienteId, "Moroso");
+                        System.out.println("Estado actualizado correctamente");
 
                     } catch (SQLException e) {
                         System.err.println("Error en base de datos actualizando situacion crediticia");
+                    } catch (IllegalArgumentException exception) {
+                        System.err.println(exception.getMessage());
                     }
                 }
 
                 case EXPORTAR -> {
                     try {
-                        int id = ScannerUtils.capturarNumero("Id cliente");
+                        String documento = ScannerUtils.capturarTexto("Documento del cliente");
+                        int id = clienteDAO.consultarIdCliente(documento);
+
                         Cliente cliente = clienteDAO.consultarClientePorId(id);
 
                         if (cliente != null) {

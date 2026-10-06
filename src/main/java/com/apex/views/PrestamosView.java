@@ -41,11 +41,11 @@ public class PrestamosView {
                     // Lógica para crear préstamos
 
                     try {
-                        String nombreCliente = ScannerUtils.capturarTexto("Nombre del cliente");
-                        int idCliente = clienteDAO.consultarIdCliente(nombreCliente);
+                        String documentoCliente = ScannerUtils.capturarTexto("Documento del cliente");
+                        int idCliente = clienteDAO.consultarIdCliente(documentoCliente);
 
-                        String nombreEmpleado = ScannerUtils.capturarTexto("Nombre del empleado");
-                        int idEmpleado = empleadoDAO.consultarIdEmpleado(nombreEmpleado);
+                        String documentoEmpleado = ScannerUtils.capturarTexto("Documento del empleado");
+                        int idEmpleado = empleadoDAO.consultarIdEmpleado(documentoEmpleado);
 
                         double monto = ScannerUtils.capturarDecimal("Monto total");
                         int periodoDeTiempo = ScannerUtils.capturarNumero("Periodo (meses)");
@@ -76,7 +76,9 @@ public class PrestamosView {
                     // Lógica para cambiar estado
 
                     try {
-                        int clienteId = ScannerUtils.capturarNumero("Id del cliente");
+                        String documento = ScannerUtils.capturarTexto("Documento del cliente");
+                        int clienteId = clienteDAO.consultarIdCliente(documento);
+
                         List<Prestamo> prestamosDelCliente = prestamoDAO.prestamosPorCliente(clienteId);
                         prestamosDelCliente.forEach(prestamo -> {
                             try {
@@ -101,6 +103,13 @@ public class PrestamosView {
 
                 case EXPORTAR -> {
                     try {
+                        String documentoDelCliente = ScannerUtils.capturarTexto("Documento del cliente");
+                        int clienteId = clienteDAO.consultarIdCliente(documentoDelCliente);
+
+                        List<Prestamo> prestamosDelCliente = prestamoDAO.prestamosPorCliente(clienteId);
+
+                        prestamosDelCliente.forEach(Prestamo::mostrarPrestamo);
+
                         int id = ScannerUtils.capturarNumero("Id del prestamo");
                         Prestamo prestamo = prestamoDAO.seleccionarPorId(id);
 

@@ -1,6 +1,7 @@
 package com.apex.dao;
 
 import com.apex.database.ConexionDB;
+import com.apex.models.Cliente;
 import com.apex.models.Pago;
 import com.apex.models.Prestamo;
 import com.apex.util.ScannerUtils;
@@ -12,7 +13,9 @@ import java.util.List;
 
 public class PagosDAO {
 
-    private static final PagosDAO pagosDAO = new PagosDAO();
+    private static final PagosDAO pagosDAO = PagosDAO.instanciaUnica();
+    private static final ClienteDAO clienteDAO = ClienteDAO.instanciaUnica();
+
 
     public static PagosDAO instanciaUnica() {
         return pagosDAO;
@@ -72,6 +75,13 @@ public class PagosDAO {
     }
 
     public void verificarMonto (double monto) throws SQLException {
+
+        String documento = ScannerUtils.capturarTexto("Documento del cliente");
+        int idCliente = clienteDAO.consultarIdCliente(documento);
+
+        List<Prestamo> prestamosDelCliente = prestamoDAO.prestamosPorCliente(idCliente);
+        prestamosDelCliente.forEach(prestamo -> prestamo.mostrarPrestamo());
+
         int idPrestamo = ScannerUtils.capturarNumero("Id del prestamo");
         Prestamo prestamo = prestamoDAO.seleccionarPorId(idPrestamo);
 

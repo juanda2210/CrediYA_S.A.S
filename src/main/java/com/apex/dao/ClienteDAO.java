@@ -114,8 +114,8 @@ public class ClienteDAO {
                 .orElse(null);
     }
 
-    public int consultarIdCliente (String nombre) throws SQLException {
-        Cliente clienteEncontrado = this.consultarClientePorNombre(nombre);
+    public int consultarIdCliente (String documento) throws SQLException {
+        Cliente clienteEncontrado = this.clientePorDocumento(documento);
         if (clienteEncontrado != null) {
             return clienteEncontrado.getId();
         } else {
@@ -233,5 +233,15 @@ public class ClienteDAO {
         }
 
         return clientes;
+    }
+
+
+    public Cliente clientePorDocumento(String documento) throws SQLException {
+        List<Cliente> clientes = this.listar();
+
+        return clientes.stream()
+                .filter(cliente -> cliente.getDocumento().equalsIgnoreCase(documento))
+                .findFirst()
+                .orElse(null);
     }
 }

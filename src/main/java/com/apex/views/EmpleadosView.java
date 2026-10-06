@@ -36,7 +36,7 @@ public class EmpleadosView {
                     try {
                         System.out.println("\n");
                         String nombre = ScannerUtils.capturarTexto("Nombre");
-                        String documento = ScannerUtils.capturarTexto("Documento");
+                        String documento = ScannerUtils.capturarRegistroDocumentoEmpleado("Documento");
                         String rol = ScannerUtils.capturarTexto("Rol");
                         String correo = ScannerUtils.capturarTexto("Correo");
                         Double salario = ScannerUtils.capturarDecimal("Salario");
@@ -53,16 +53,14 @@ public class EmpleadosView {
                     // Lógica para consultar empleados
 
                     try {
-                        int id = ScannerUtils.capturarNumero("id");
-
-                        Empleado empleado = empleadoDAO.buscarPorId(id);
+                        String documento = ScannerUtils.capturarTexto("Documento");
+                        Empleado empleado = empleadoDAO.empleadoPorDocumento(documento);
 
                         try {
                             empleado.mostrarEmpleado();
                         } catch (NullPointerException e) {
-                            System.err.println("Empleado no encontrado por id #" + id);
+                            System.err.println("Empleado no encontrado por documento #" + documento);
                         }
-
 
                     } catch (SQLException e) {
                         System.err.println("No se ha encontrado el empleado");
@@ -71,7 +69,9 @@ public class EmpleadosView {
 
                 case EXPORTAR -> {
                     try {
-                        int id = ScannerUtils.capturarNumero("Id empleado");
+                        String documento = ScannerUtils.capturarTexto("Documento del empleado");
+                        int id = empleadoDAO.consultarIdEmpleado(documento);
+
                         Empleado empleado = empleadoDAO.buscarPorId(id);
 
                         if (empleado != null) {

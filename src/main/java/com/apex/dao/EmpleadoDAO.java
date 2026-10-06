@@ -110,14 +110,22 @@ public class EmpleadoDAO {
 
     }
 
-    public int consultarIdEmpleado(String nombre) throws SQLException {
-        Empleado empleadoEncontrado = this.consultarPorNombre(nombre);
+    public int consultarIdEmpleado(String documento) throws SQLException {
+        Empleado empleadoEncontrado = this.empleadoPorDocumento(documento);
 
         if (empleadoEncontrado != null) {
             return empleadoEncontrado.getId();
         } else {
             throw new IllegalArgumentException("Empleado no encontrado en la base de datos");
         }
+    }
 
+    public Empleado empleadoPorDocumento(String documento) throws SQLException {
+        List<Empleado> empleados = this.listar();
+
+        return empleados.stream()
+                .filter(empleado -> empleado.getDocumento().equalsIgnoreCase(documento))
+                .findFirst()
+                .orElse(null);
     }
 }

@@ -1,5 +1,6 @@
 package com.apex.views;
 
+import com.apex.dao.ClienteDAO;
 import com.apex.dao.PagosDAO;
 import com.apex.dao.PrestamoDAO;
 import com.apex.models.Pago;
@@ -21,6 +22,7 @@ public class PagosView {
 
     public static PagosDAO pagosDAO = PagosDAO.instanciaUnica();
     public static PrestamoDAO prestamoDAO = PrestamoDAO.instanciaUnica();
+    public static ClienteDAO clienteDAO = ClienteDAO.instanciaUnica();
 
     public static void menu() {
         while (true) {
@@ -49,11 +51,18 @@ public class PagosView {
                 case MOSTRAR_SALDO_PENDIENTE -> {
                     // Lógica para mostrar saldo pendiente
                     try {
+                        String documentoCliente = ScannerUtils.capturarTexto("Documento del cliente");
+                        int id = clienteDAO.consultarIdCliente(documentoCliente);
+
+                        List<Prestamo> prestamosDelCliente = prestamoDAO.prestamosPorCliente(id);
+
+                        prestamosDelCliente.forEach(Prestamo::mostrarPrestamo);
+
                         int idPrestamo = ScannerUtils.capturarNumero("Id del prestamo");
                         List<Pago> pagosPorIdPrestamo = pagosDAO.pagosPorIdPrestamo(idPrestamo);
 
                         double sumaDePagos = pagosPorIdPrestamo.stream()
-                                .mapToDouble(pago -> pago.getMonto())
+                                .mapToDouble(Pago::getMonto)
                                 .sum();
 
                         Prestamo prestamo = prestamoDAO.seleccionarPorId(idPrestamo);
@@ -62,7 +71,7 @@ public class PagosView {
 
                         System.out.println("El saldo pendiente es " + saldoPendiente);
                     } catch (SQLException e) {
-                        e.getMessage();
+                        System.err.println(e.getMessage());
                     }
                 }
 
@@ -70,6 +79,13 @@ public class PagosView {
                     // Lógica para mostrar histórico de pagos
 
                     try {
+                        String documentoCliente = ScannerUtils.capturarTexto("Documento del cliente");
+                        int id = clienteDAO.consultarIdCliente(documentoCliente);
+
+                        List<Prestamo> prestamosDelCliente = prestamoDAO.prestamosPorCliente(id);
+
+                        prestamosDelCliente.forEach(Prestamo::mostrarPrestamo);
+
                         int idPrestamo = ScannerUtils.capturarNumero("Id del prestamo");
                         List<Pago> pagosPorIdPrestamo = pagosDAO.pagosPorIdPrestamo(idPrestamo);
 
@@ -86,6 +102,19 @@ public class PagosView {
 
                 case EXPORTAR -> {
                     try {
+                        String documentoDelCliente = ScannerUtils.capturarTexto("Documento del cliente");
+                        int clienteId = clienteDAO.consultarIdCliente(documentoDelCliente);
+
+                        List<Prestamo> prestamosDelCliente = prestamoDAO.prestamosPorCliente(clienteId);
+
+                        prestamosDelCliente.forEach(Prestamo::mostrarPrestamo);
+
+                        int idPrestamo = ScannerUtils.capturarNumero("Id del prestamo");
+
+                        List<Pago> pagosPorIdPrestamo = pagosDAO.pagosPorIdPrestamo(idPrestamo);
+                        pagosPorIdPrestamo.forEach(Pago::mostrarPago);
+
+
                         int id = ScannerUtils.capturarNumero("Id del pago");
                         Pago pago = pagosDAO.buscarPagoPorId(id);
 
