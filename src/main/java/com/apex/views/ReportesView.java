@@ -16,8 +16,8 @@ public class ReportesView {
     public static final int CONSULTAR_CLIENTES_MOROSOS = 3;
     public static final int SALIR = 4;
 
-    public static PrestamoDAO prestamoDAO = new PrestamoDAO();
-    public static ClienteDAO clienteDAO = new ClienteDAO();
+    public static PrestamoDAO prestamoDAO = PrestamoDAO.instanciaUnica();
+    public static ClienteDAO clienteDAO = ClienteDAO.instanciaUnica();
 
     public static void menu() {
         while (true) {
@@ -35,7 +35,13 @@ public class ReportesView {
                     // Lógica para consultar préstamos activos
                     try {
                         List<Prestamo> prestamosActivos = prestamoDAO.prestamosPendientes();
-                        prestamosActivos.forEach(Prestamo::mostrarPrestamo);
+
+                        if (prestamosActivos.isEmpty()) {
+                            System.err.println("No hay prestamos activos en la base de datos");
+                        } else {
+                            prestamosActivos.forEach(Prestamo::mostrarPrestamo);
+                        }
+
                     } catch (SQLException e) {
                         System.err.println("Error en base de datos consultando prestamos activos");
                     }
@@ -45,7 +51,13 @@ public class ReportesView {
                     // Lógica para consultar préstamos vencidos
                     try {
                         List<Prestamo> prestamosVencidos = prestamoDAO.prestamosVencidos();
-                        prestamosVencidos.forEach(Prestamo::mostrarPrestamo);
+
+                        if (prestamosVencidos.isEmpty()) {
+                            System.err.println("No hay prestamos vencidos en la base de datos");
+                        } else {
+                            prestamosVencidos.forEach(Prestamo::mostrarPrestamo);
+                        }
+
                     } catch (SQLException e) {
                         System.err.println("Error en base de datos consultando prestamos vencidos");
                     }
@@ -55,7 +67,13 @@ public class ReportesView {
                     // Lógica para consultar clientes morosos
                     try {
                         List<Cliente> clientesMorosos = clienteDAO.clientesMorosos();
-                        clientesMorosos.forEach(Cliente::mostrarCliente);
+
+                        if (clientesMorosos.isEmpty()) {
+                            System.err.println("No hay clientes morosos en base de datos");
+                        } else {
+                            clientesMorosos.forEach(Cliente::mostrarCliente);
+                        }
+
                     } catch (SQLException e) {
                         System.err.println("Error en base de datos consultando clientes morosos");
                     }

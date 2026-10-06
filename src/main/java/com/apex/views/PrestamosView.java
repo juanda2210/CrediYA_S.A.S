@@ -8,7 +8,6 @@ import com.apex.models.Simulacion;
 import com.apex.util.FileUtils;
 import com.apex.util.ScannerUtils;
 
-import java.io.File;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
@@ -21,9 +20,9 @@ public class PrestamosView {
     public static final int EXPORTAR = 4;
     public static final int SALIR = 5;
 
-    public static PrestamoDAO prestamoDAO = new PrestamoDAO();
-    public static ClienteDAO clienteDAO = new ClienteDAO();
-    public static EmpleadoDAO empleadoDAO = new EmpleadoDAO();
+    public static PrestamoDAO prestamoDAO = PrestamoDAO.instanciaUnica();
+    public static ClienteDAO clienteDAO = ClienteDAO.instanciaUnica();
+    public static EmpleadoDAO empleadoDAO = EmpleadoDAO.instanciaUnica();
 
     public static void menu() {
         while (true) {
@@ -32,7 +31,7 @@ public class PrestamosView {
             \n===== MENÚ DE PRÉSTAMOS =====
             1. Crear préstamo
             2. Simulación de préstamo
-            3. Cambiar estado
+            3. Cambiar estado a Pagado
             4. Exportar prestamo a archivo
             5. Volver al menu principal""");
 
@@ -107,6 +106,7 @@ public class PrestamosView {
 
                         if (prestamo != null) {
                             FileUtils.escribirPrestamo(prestamo);
+                            System.out.println("\nPrestamo exportado a archivo satisfactoriamente");
                         } else {
                             System.err.println("Prestamo no encontrado por id " + id);
                         }

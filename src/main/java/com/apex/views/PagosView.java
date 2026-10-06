@@ -19,8 +19,8 @@ public class PagosView {
     public static final int EXPORTAR = 4;
     public static final int SALIR = 5;
 
-    public static PagosDAO pagosDAO = new PagosDAO();
-    public static PrestamoDAO prestamoDAO = new PrestamoDAO();
+    public static PagosDAO pagosDAO = PagosDAO.instanciaUnica();
+    public static PrestamoDAO prestamoDAO = PrestamoDAO.instanciaUnica();
 
     public static void menu() {
         while (true) {
@@ -73,9 +73,14 @@ public class PagosView {
                         int idPrestamo = ScannerUtils.capturarNumero("Id del prestamo");
                         List<Pago> pagosPorIdPrestamo = pagosDAO.pagosPorIdPrestamo(idPrestamo);
 
-                        pagosPorIdPrestamo.forEach(Pago::mostrarPago);
-                    } catch (RuntimeException e) {
-                        throw new RuntimeException(e);
+                        if (pagosPorIdPrestamo.isEmpty()) {
+                            System.err.println("Historico de pagos no encontrado del prestamo id " + idPrestamo);
+                        } else {
+                            pagosPorIdPrestamo.forEach(Pago::mostrarPago);
+                        }
+
+                    } catch (SQLException e) {
+                        System.err.println("Error consultando base de datos de pagos");
                     }
                 }
 
@@ -86,6 +91,7 @@ public class PagosView {
 
                         if (pago != null) {
                             FileUtils.escribirPago(pago);
+                            System.out.println("\nPago exportado a archivo satisfactoriamente");
                         } else {
                             System.err.println("Pago no encontrado en base de datos");
                         }

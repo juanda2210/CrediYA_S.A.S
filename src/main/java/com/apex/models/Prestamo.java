@@ -103,7 +103,9 @@ public class Prestamo {
                     "/" + fecha_inicio.getYear());
             System.out.println("----------------------------------------------");
             System.out.println("Cliente: " + clienteDelPrestamo.getNombre());
-            System.out.println("El restoooo");
+            System.out.println("Monto: " + this.monto);
+            System.out.println("Interes total: " + this.interes);
+            System.out.println("Periodo de tiempo: " + this.cuotas);
         }
     }
 

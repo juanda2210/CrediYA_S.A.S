@@ -18,7 +18,7 @@ public class ClientesView {
     public static final int EXPORTAR = 5;
     public static final int SALIR = 6;
 
-    public static ClienteDAO clienteDAO = new ClienteDAO();
+    public static ClienteDAO clienteDAO = ClienteDAO.instanciaUnica();
 
     public static void menu() {
         while (true) {
@@ -56,7 +56,12 @@ public class ClientesView {
 
                     try {
                         List<Cliente> clientes = clienteDAO.listar();
-                        clientes.forEach(cliente -> cliente.mostrarCliente());
+
+                        if (clientes.isEmpty()) {
+                            System.err.println("No hay clientes por listar");
+                        } else {
+                            clientes.forEach(Cliente::mostrarCliente);
+                        }
                     } catch (SQLException e) {
                         System.err.println("Fue imposible listar los clientes");
                     }
@@ -81,7 +86,21 @@ public class ClientesView {
                 case CLIENTE_MOROSO -> {
                     try {
                         int id = ScannerUtils.capturarNumero("Id cliente");
-                        clienteDAO.actualizarSituacionFinanciera(id, "Moroso");
+                        List<Cliente> clientes = clienteDAO.listar();
+
+                        Cliente clienteEncontrado = clientes.stream()
+                                .filter(cliente -> cliente.getId() == id)
+                                .findFirst()
+                                .orElse(null);
+
+                        if (clienteEncontrado != null) {
+                            clienteDAO.actualizarSituacionFinanciera(id, "Moroso");
+                            System.out.println("Estado actualizado correctamente");
+                        } else {
+                            System.err.println("Cliente no encontrado en base de datos");
+                        }
+
+
                     } catch (SQLException e) {
                         System.err.println("Error en base de datos actualizando situacion crediticia");
                     }
@@ -94,6 +113,7 @@ public class ClientesView {
 
                         if (cliente != null) {
                             FileUtils.escribirCliente(cliente);
+                            System.out.println("\nCliente exportado a archivo satisfactoriamente");
                         } else {
                             System.err.println("Cliente no encontrado por id " + id);
                         }

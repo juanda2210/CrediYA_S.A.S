@@ -14,7 +14,7 @@ public class EmpleadosView {
     public static final int EXPORTAR = 3;
     public static final int SALIR = 4;
 
-    public static EmpleadoDAO empleadoDAO = new EmpleadoDAO();
+    public static EmpleadoDAO empleadoDAO = EmpleadoDAO.instanciaUnica();
 
     public static void menu() {
 
@@ -76,6 +76,7 @@ public class EmpleadosView {
 
                         if (empleado != null) {
                             FileUtils.escribirEmpleado(empleado);
+                            System.out.println("\nEmpleado exportado a archivo satisfactoriamente");
                         } else {
                             System.err.println("Empleado no encontrado");
                         }

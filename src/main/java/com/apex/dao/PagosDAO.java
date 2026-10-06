@@ -12,7 +12,14 @@ import java.util.List;
 
 public class PagosDAO {
 
-    PrestamoDAO prestamoDAO = new PrestamoDAO();
+    private static final PagosDAO pagosDAO = new PagosDAO();
+
+    public static PagosDAO instanciaUnica() {
+        return pagosDAO;
+    }
+
+
+    PrestamoDAO prestamoDAO = PrestamoDAO.instanciaUnica();
 
     public void registrarAbono(Pago pago) throws SQLException {
         String sql = """
@@ -31,7 +38,7 @@ public class PagosDAO {
         }
     }
 
-    public List<Pago> pagosPorIdPrestamo(int idPrestamo) {
+    public List<Pago> pagosPorIdPrestamo(int idPrestamo) throws SQLException  {
 
         List<Pago> pagos = new ArrayList<>();
 
@@ -59,8 +66,6 @@ public class PagosDAO {
                 pagos.add(pago);
             }
 
-        } catch (SQLException e) {
-            System.err.println("Error al consultar los pagos: " + e.getMessage());
         }
 
         return pagos;
@@ -69,6 +74,11 @@ public class PagosDAO {
     public void verificarMonto (double monto) throws SQLException {
         int idPrestamo = ScannerUtils.capturarNumero("Id del prestamo");
         Prestamo prestamo = prestamoDAO.seleccionarPorId(idPrestamo);
+
+        if(prestamo.getEstado().equalsIgnoreCase("Pagado")) {
+            throw new IllegalArgumentException("Este prestamo ya fue pagado, por lo tanto, no puede hacer abonos");
+        }
+
         List<Pago> pagosPorIdPrestamo = this.pagosPorIdPrestamo(idPrestamo);
 
         double sumaDePagos = pagosPorIdPrestamo.stream()

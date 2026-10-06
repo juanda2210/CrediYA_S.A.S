@@ -13,7 +13,7 @@ public class Cliente {
     private String telefono;
     private String situacionCrediticia;
 
-    static ClienteDAO clienteDAO = new ClienteDAO();
+    public static ClienteDAO clienteDAO = ClienteDAO.instanciaUnica();
 
     public Cliente() {
     }

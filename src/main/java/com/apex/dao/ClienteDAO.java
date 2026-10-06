@@ -13,11 +13,17 @@ import java.util.List;
 
 public class ClienteDAO {
 
+    private static final ClienteDAO clienteDAO = new ClienteDAO();
+
+    public static ClienteDAO instanciaUnica() {
+        return clienteDAO;
+    }
+
     public void crear(Cliente cliente) throws SQLException {
 
         String sql = """
-                INSERT INTO clientes (nombre, documento, correo, telefono,situacion_crediticia)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO clientes (nombre, documento, correo, telefono, situacion_crediticia)
+                VALUES (?, ?, ?, ?, ?)
                 """;
 
         try (Connection conn = ConexionDB.getConnection();

@@ -12,6 +12,12 @@ import java.util.List;
 
 public class EmpleadoDAO {
 
+    private static final EmpleadoDAO empleadoDAO = new EmpleadoDAO();
+
+    public static EmpleadoDAO instanciaUnica() {
+        return empleadoDAO;
+    }
+
     public void crear(Empleado empleado) throws SQLException {
 
         String sql = """

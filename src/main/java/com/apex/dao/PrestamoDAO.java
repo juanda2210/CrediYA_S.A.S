@@ -9,6 +9,12 @@ import java.util.List;
 
 public class PrestamoDAO {
 
+    private static final PrestamoDAO prestamoDAO = new PrestamoDAO();
+
+    public static PrestamoDAO instanciaUnica() {
+        return prestamoDAO;
+    }
+
     public List<Prestamo> listar() throws SQLException {
 
         String sql = """
